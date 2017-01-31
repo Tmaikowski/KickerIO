@@ -1,0 +1,50 @@
+{% extends 'login_register/layout.html' %}
+
+{% block content %}
+    <a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
+    <h1 class="newsreel">{{ user.first_name }}'s Profile</h1>
+    <p>{{ followers }} follower(s)</p>
+    <div class="carousel">
+      {% for article in popular_articles %}
+      <a class="carousel-item" href="{{ article.url }}"><img src="{{ article.main_image }}"></a>
+      {% endfor %}
+    </div>
+    <h3 class="newsreel">Recent Articles</h3>
+    <table class="responsive-table">
+      <thead>
+        <tr>
+          <th data-field="id">Title</th>
+          <th data-field="id">Date Published</th>
+          <th data-field="id">Likes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in recent_articles %}
+        <tr>
+          <td>{{ article.title }}</td>
+          <td>{{ article.created_at }}</td>
+          <td>{{ article.like_set.count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h3 class="newsreel">Popular Articles</h3>
+    <table class="responsive-table">
+      <thead>
+        <tr>
+          <th data-field="id">Title</th>
+          <th data-field="id">Date Published</th>
+          <th data-field="id">Likes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in popular_articles %}
+        <tr>
+          <td>{{ article.title }}</td>
+          <td>{{ article.created_at }}</td>
+          <td>{{ article.like_set.count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

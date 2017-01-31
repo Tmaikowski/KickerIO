@@ -1,0 +1,42 @@
+{% extends 'login_register/layout.html' %}
+{% load like_extras %}
+{% load follow_extras %}
+{% load static %}
+
+{% block content %}
+    <a class="btn-flat waves-red" href="{% url 'news:index' %}">Home</a>
+    <h1 class="newsreel">Newsreel</h1>
+    <p><i>Your network news</i></p>
+    <div class="row news-row fill-height">
+    {% for article in articles %}
+      <div class="xtra-margin card-panel hoverable left col s12 m5 offset-m1 l3 offset-l1">
+        <p><a href="{% url 'login_register:profile' id=article.creator.id %}">{{ article.creator.first_name }}</a> shared:</p>
+        {% if not request.user|already_follow:article.creator.id %}
+        <p>Want to follow <a href="{% url 'login_register:follow' id=article.creator.id %}">{{ article.creator.first_name }}</a>?</p>
+        {% endif %}
+        <a href="{{ article.url }}"><img class="responsive-img" src="{{ article.main_image }}" /></a>
+        <h5><a class="modal-trigger" href="#modal{{article.id}}">{{ article.title }}</a></h5>
+        <p class="truncate">{{ article.summarized_text }}</p>
+        <p>{{ article.published_on }}</p>
+        {% for category in article.category_set.all %}
+        <p>{{ category.name }}</p>
+        <h6>{{ article.like_set.count }} Likes</h6>
+        <div id="modal{{article.id}}" class="modal">
+          <div class="modal-content">
+            <h4>{{ article.title }}</h4>
+            <p>{{ article.summarized_text }}</p>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+          </div>
+        </div>
+        {% if not article|already_liked:request.user.id %}
+        <p><a id="like_article" a-id="{{article.id}}" href="">Like this article</a></p>
+        {% else %}
+        <p><a id="unlike_article" a-id="{{article.id}}" href="{% url 'news:unlike' id=article.id %}">Unlike</a></p>
+        {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'login_register/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1 class="title-text flow-text">Kicker.io</h1>
+<h5 class="title-subtext flow-text">Breaking news made social</h5>
+<img class="responsive-img cover-img" src="{% static 'login_register/img/landing_cover.jpg' %}" alt="Newspaper and Coffee" />
+<form action="{% url 'login_register:process_login' %}" method="POST">
+  {% csrf_token %}
+  <div class="input-field">
+    <label for="{{ authform.username.id_for_label }}">Username</label>
+    {{ authform.username }}
+  </div>
+  <div class="input-field">
+    <label for="{{ authform.password.id_for_label }}">Password</label>
+    {{ authform.password }}
+  </div>
+  <input class="btn-flat" type="submit" value="Login">
+</form>
+<a class="btn-flat" href="{% url 'login_register:register' %}">Not a member yet? Sign up now!</a>
+
+{% endblock %}

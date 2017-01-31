@@ -1,0 +1,20 @@
+{% extends 'login_register/layout.html' %}
+
+{% block content %}
+<h3 class="newsreel">{{ request.user.first_name }}'s Account</h3>
+<a href="{% url 'news:index' %}">Back to news</a>
+<hr>
+<br>
+<p>First Name: {{ request.user.first_name }}</p>
+<p>Last Name: {{ request.user.last_name }}</p>
+<p>Email: {{ request.user.email }}</p>
+<p>Bio: {{ request.user.profile.bio }}</p>
+<p>Date Joined: {{ request.user.date_joined }}</p>
+<p>Birthday: {{ request.user.profile.birthday }}</p>
+<h3>I am following:</h3>
+{% for follow in follows %}
+  <p>{{ follow.user.username }}</p>
+{% endfor %}
+<hr>
+<a class="btn-flat" href="{% url 'login_register:edit' id=request.user.id %}">Edit</a>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'login_register/layout.html' %}
+
+{% block content %}
+    <a class="btn-flat" href="{% url 'login_register:logout' %}">Logout</a>
+    <a class="btn-flat" href="{% url 'login_register:account_settings' id=request.user.id %}">Account Settings</a>
+    <a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
+    <a class="btn-flat" href="{% url 'login_register:profile' id=request.user.id %}">Profile</a>
+    <h2 class="newsreel">Your News</h2>
+    <p>Welcome, {{ request.user.first_name }}! <a id="help-link" href="">Need help?</a></p>
+    <form action="{% url 'news:get_new_articles' %}" method="POST">
+      {% csrf_token %}
+      <div class="input-field">
+        <label for="{{ SummaryForm.search_term.id_for_label }}">Search Term:</label>
+        {{ SummaryForm.search_term }}
+      </div>
+      <input class="btn-flat scale-effect" type="submit" value="Submit">
+    </form>
+    {% for key, val in request.session.user_articles.iteritems %}
+    <div class="card hoverable left col s12 m6 l4">
+      <div class="card-image">
+        <a href="{{ val.meta.url }}"><img class="responsive-img" src="{{ val.meta.main_image }}" /></a>
+        <!-- <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">+</i></a> -->
+      </div>
+      <div class="card-content">
+        <span class="card-title">{{ val.title }}</span>
+        {% for sentence in val.summary_sentences %}
+        <p>{{ sentence }}</p>
+        {% endfor %}
+      </div>
+      <!-- <h4>Meta</h4>
+      {% for x, y in val.meta.iteritems %}
+        <p>{{y}}</p>
+      {% endfor %} -->
+      <form action="{% url 'news:share' id=key %}" method="POST">
+        {% csrf_token %}
+        <input class="btn-flat waves-effect waves-red" type="submit" value="Share">
+      </form>
+    </div>
+    {% endfor %}
+
+{% endblock %}

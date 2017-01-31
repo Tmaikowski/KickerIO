@@ -1,0 +1,17 @@
+{% extends 'login_register/layout.html' %}
+
+{% block content %}
+    <h1 class="newsreel">Edit {{ request.user.first_name }}'s Account</h1>
+    <!-- using <formname>.<fieldname> allows access to each individual field for rendering -->
+    <form action="{% url 'login_register:update_account' id=request.user.id %}" method="POST">
+      {% csrf_token %}
+      <p>First Name: {{ user_form.first_name }}</p>
+      <p>Last Name: {{ user_form.last_name }}</p>
+      <p>Username: {{ user_form.username }}</p>
+      <p>Email: {{ user_form.email }}</p>
+      {{ profile_form.as_p }}
+      <input class="btn-flat" type="submit" value="Update Account">
+    </form>
+    <br>
+    <a class="btn-flat" href="{% url 'login_register:account_settings' id=request.user.id %}">Back to Profile</a>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'login_register/layout.html' %}
+
+{% block content %}
+
+<h1 class="newsreel">Register</h1>
+<form action="{% url 'login_register:process_registration' %}" method="POST">
+  {% csrf_token %}
+  {{ register_form.as_p }}
+  {{ profile_form.as_p }}
+  <input class="btn-flat" type="submit" value="Register">
+</form>
+<br>
+<a class="btn-flat" href="{% url 'login_register:index' %}">Already a member? Log in!</a>
+
+{% endblock %}
