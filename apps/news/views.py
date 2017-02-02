@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+import json
 
 from .forms import SummaryArticles
 from .models import Article, Category, Like
@@ -57,13 +58,6 @@ def newsreel(request):
     user_profile = User.objects.get(id=request.user.id).profile
     #get the user_id of everyone the logged in user is following
     network_ids = [am_following.user_id for am_following in user_profile.follows.all()]
-    print "*"*50
-    print "*"*50
-    print "*"*50
-    print network_ids
-    print "*"*50
-    print "*"*50
-    print "*"*50
     articles = Article.objects.filter(Q(creator__in=network_ids) | Q(creator=request.user.id))
     context = {
         'articles': articles
@@ -78,7 +72,12 @@ def like_article(request, id):
         user=user,
         article=article
     )
-    return redirect(reverse("news:newsreel"))
+    article_likes = article.like_set.count()
+    # return redirect(reverse("news:newsreel"))
+    return HttpResponse(
+        json.dumps(article_likes),
+        content_type="application/json"
+    )
 
 def unlike(request, id):
     user = User.objects.get(id=request.user.id)
@@ -88,4 +87,9 @@ def unlike(request, id):
         Q(article=article)
     )
     like_obj.delete()
-    return redirect(reverse("news:newsreel"))
+    article_likes = article.like_set.count()
+    # return redirect(reverse("news:newsreel"))
+    return HttpResponse(
+        json.dumps(article_likes),
+        content_type="application/json"
+    )

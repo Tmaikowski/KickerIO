@@ -1,8 +1,19 @@
 {% extends 'login_register/layout.html' %}
+{% load profile_follow_extras %}
 
 {% block content %}
-    <a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
+<a class="btn-flat" href="{% url 'login_register:logout' %}">Logout</a>
+<a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
+<a class="btn-flat" href="{% url 'login_register:account_settings' id=request.user.id %}">Account Settings</a>
     <h1 class="newsreel">{{ user.first_name }}'s Profile</h1>
+    {% if not request.user|profile_already_follow:user.id %}
+    <form action="{% url 'login_register:follow' id=user.id %}">
+      {% csrf_token %}
+      <input class="btn" type="submit" value="Follow">
+    </form>
+    {% elif request.user.id != user.id %}
+    <p class="red-text accent-3">Following!</p>
+    {% endif %}
     <p>{{ followers }} follower(s)</p>
     <div class="carousel">
       {% for article in popular_articles %}
@@ -10,41 +21,25 @@
       {% endfor %}
     </div>
     <h3 class="newsreel">Recent Articles</h3>
-    <table class="responsive-table">
-      <thead>
-        <tr>
-          <th data-field="id">Title</th>
-          <th data-field="id">Date Published</th>
-          <th data-field="id">Likes</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for article in recent_articles %}
-        <tr>
-          <td>{{ article.title }}</td>
-          <td>{{ article.created_at }}</td>
-          <td>{{ article.like_set.count }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    <ul class="collapsible popout" data-collapsible="accordion">
+      {% for article in recent_articles %}
+        <li>
+          <div class="collapsible-header">{{ article.title }} - {{ article.created_at }}</div>
+          <div class="collapsible-body">{{ article.summarized_text }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+
     <h3 class="newsreel">Popular Articles</h3>
-    <table class="responsive-table">
-      <thead>
-        <tr>
-          <th data-field="id">Title</th>
-          <th data-field="id">Date Published</th>
-          <th data-field="id">Likes</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for article in popular_articles %}
-        <tr>
-          <td>{{ article.title }}</td>
-          <td>{{ article.created_at }}</td>
-          <td>{{ article.like_set.count }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    <ul class="collapsible popout" data-collapsible="accordion">
+      {% for article in popular_articles %}
+        <li>
+          <div class="collapsible-header">{{ article.title }} - {{ article.like_set.count }} Likes</div>
+          <div class="collapsible-body">{{ article.summarized_text }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+
 {% endblock %}

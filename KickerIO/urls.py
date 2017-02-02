@@ -21,5 +21,5 @@ print "MAIN URLS FILE"
 urlpatterns = [
     url(r'^', include('apps.login_register.urls', namespace="login_register")),
     url(r'^news/', include('apps.news.urls', namespace="news")),
-    url(r'^alexa/', include('django_alexa.urls')),
+    url(r'^', include('django_alexa.urls')),
 ]

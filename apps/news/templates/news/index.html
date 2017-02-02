@@ -6,7 +6,7 @@
     <a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
     <a class="btn-flat" href="{% url 'login_register:profile' id=request.user.id %}">Profile</a>
     <h2 class="newsreel">Your News</h2>
-    <p>Welcome, {{ request.user.first_name }}! <a id="help-link" href="">Need help?</a></p>
+    <p class="red-text accent-3">Welcome, {{ request.user.first_name }}! <a id="help-link" href="">Need help?</a></p>
     <form action="{% url 'news:get_new_articles' %}" method="POST">
       {% csrf_token %}
       <div class="input-field">

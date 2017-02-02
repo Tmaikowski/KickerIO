@@ -1,8 +1,12 @@
 {% extends 'login_register/layout.html' %}
 
 {% block content %}
+<a class="btn-flat" href="{% url 'login_register:logout' %}">Logout</a>
+<a class="btn-flat" href="{% url 'news:newsreel' %}">Newsreel</a>
+<a class="btn-flat" href="{% url 'login_register:account_settings' id=request.user.id %}">Account Settings</a>
+<a class="btn-flat" href="{% url 'login_register:profile' id=request.user.id %}">Profile</a>
+
 <h3 class="newsreel">{{ request.user.first_name }}'s Account</h3>
-<a href="{% url 'news:index' %}">Back to news</a>
 <hr>
 <br>
 <p>First Name: {{ request.user.first_name }}</p>

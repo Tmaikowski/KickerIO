@@ -1,11 +1,15 @@
 from django_alexa.api import fields, intent, ResponseBuilder
 from NLTK.getlinks import *
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Count
+from models import *
 #ISSUE: Alexa times out while calling the API. Need to rewrite for only 1 result or find
 #another way to get news data
-
-
+print "-"*50
+print "-"*50
+print Article.objects.all().annotate(num_likes=Count('like')).order_by("-num_likes")[:1][0].title
+print "-"*50
+print "-"*50
 #./ ngrok http 8000
 #python manage.py runserver
 
@@ -34,10 +38,18 @@ def LaunchRequest(session):
     """
 
     print "LAUNCHREQUEST"
-    return ResponseBuilder.create_response(message="Welcome to the app",
-                                           reprompt="Give me a search term you would like news about",
+    return ResponseBuilder.create_response(message="Welcome to Kicker... ... ...What can I help you with?",
+                                           reprompt="What can I help you with?",
                                            end_session=False,
                                            launched=True)
+
+@intent
+def HelpIntent(session):
+    msg = """Kicker is a social web application for breaking news based on your interests... ... ... ...
+             You can ask me to search for a news story or read some of your top stories that you have shared with your network... ...
+             ... ... ...What would you like to do?"""
+    return ResponseBuilder.create_response(message=msg,
+                                           end_session=False)
 
 class SearchTerm(fields.AmazonSlots):
     print "IN THE CLASS"
@@ -53,10 +65,6 @@ def ReadTopStory(session, search_term):
     tell me about {search_term}
     """
 
-    print "*"*50
-    print "in read top story"
-    print "*"*50
-
     top_story = get_summarized_text(search_term)[0]
     story_title = top_story['title']
     sentences = " ".join(top_story['summary_sentences'])
@@ -69,3 +77,13 @@ def ReadTopStory(session, search_term):
         kwargs['end_session'] = False
         kwargs['launched'] = session['launched']
     return ResponseBuilder.create_response(**kwargs)
+
+@intent
+def CancelIntent(session):
+    return ResponseBuilder.create_response(message="You canceled. Thanks!",
+                                           end_session=True)
+
+@intent
+def StopIntent(session):
+    return ResponseBuilder.create_response(message="Ok ... ... See you later",
+                                           end_session=True)

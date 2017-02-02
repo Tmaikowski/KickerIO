@@ -2,7 +2,7 @@ from django import template
 from django.contrib.auth.models import User
 register = template.Library()
 
-@register.filter(name='already_follow')
+@register.filter(name='profile_already_follow')
 def already_follow(user, follow_user_id):
     print "*"*50
     print "IN FOLLOW EXTRA"

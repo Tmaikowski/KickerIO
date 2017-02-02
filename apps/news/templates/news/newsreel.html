@@ -4,9 +4,19 @@
 {% load static %}
 
 {% block content %}
-    <a class="btn-flat waves-red" href="{% url 'news:index' %}">Home</a>
+    <div class="row">
+      <a class="left btn-flat waves-red" href="{% url 'news:index' %}">Home</a>
+      <a class="btn-flat" href="{% url 'login_register:profile' id=request.user.id %}">Profile</a>
+      <a class="btn-flat" href="{% url 'login_register:account_settings' id=request.user.id %}">Account Settings</a>
+      <a class="btn-flat" href="{% url 'login_register:logout' %}">Logout</a>
+      <form id="search_form" class="dropdown-button col s3 offset-s7 m3 offset-m7 l3 offset-l9" data-beloworigin="true" data-activates="dropdown1" action="{% url 'login_register:search' %}" method="POST">
+        {% csrf_token %}
+        <input type="search" name="find_friends" placeholder="Grow Your Network">
+      </form>
+      <ul id='dropdown1' class='dropdown-content col s12 m4 offset-m5 l4 offset-l6'></ul>
+    </div>
     <h1 class="newsreel">Newsreel</h1>
-    <p><i>Your network news</i></p>
+    <p class="red-text accent-3 newsreel-sub"><i>Your network news</i></p>
     <div class="row news-row fill-height">
     {% for article in articles %}
       <div class="xtra-margin card-panel hoverable left col s12 m5 offset-m1 l3 offset-l1">
@@ -20,7 +30,7 @@
         <p>{{ article.published_on }}</p>
         {% for category in article.category_set.all %}
         <p>{{ category.name }}</p>
-        <h6>{{ article.like_set.count }} Likes</h6>
+        <h6 class="like_count">{{ article.like_set.count }} Likes</h6>
         <div id="modal{{article.id}}" class="modal">
           <div class="modal-content">
             <h4>{{ article.title }}</h4>
@@ -30,10 +40,11 @@
             <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
           </div>
         </div>
+        <!-- <a class="test_like" a-id="{{ article.id }}" href="">Like</a> -->
         {% if not article|already_liked:request.user.id %}
-        <p><a id="like_article" a-id="{{article.id}}" href="">Like this article</a></p>
+        <p><a class="like_article" a-id="{{article.id}}" href="">Like</a></p>
         {% else %}
-        <p><a id="unlike_article" a-id="{{article.id}}" href="{% url 'news:unlike' id=article.id %}">Unlike</a></p>
+        <p><a class="unlike_article" a-id="{{article.id}}" href="">Unlike</a></p>
         {% endif %}
         {% endfor %}
       </div>

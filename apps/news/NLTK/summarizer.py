@@ -9,7 +9,7 @@ class FrequencySummarizer(object):
         """
             Initilize the text summarizer.
             Words that have a frequency term lower than min_cut
-            or higer than max_cut will be ignored.
+            or higher than max_cut will be ignored.
         """
         self._min_cut = min_cut
         self._max_cut = max_cut
@@ -34,6 +34,7 @@ class FrequencySummarizer(object):
             freq[w] = freq[w]/m
             if freq[w] >= self._max_cut or freq[w] <= self._min_cut:
                 del freq[w]
+        print freq
         return freq
 
     def summarize(self, text, n):

@@ -16,4 +16,5 @@ def get_summarized_text(search_term):
                 "published_on": val['metadata']['published_on']
             }
         }
+
     return summary_dict

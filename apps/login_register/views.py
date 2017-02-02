@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Count
+import json
 
 from .forms import UserCreateForm, ProfileForm
 from .models import Profile
@@ -132,12 +133,6 @@ def follow(request, id):
     #Go through the profile to set the M2M relationship
     profile = User.objects.get(id=request.user.id).profile
     profile_to_follow = User.objects.get(id=id).profile
-    # user.follows.add(to_follow)
-    print "*"*50
-    print profile
-    print "*"*50
-    print profile_to_follow
-    print "*"*50
     profile.follows.add(profile_to_follow)
     return redirect(reverse('news:newsreel'))
 
@@ -153,3 +148,18 @@ def profile(request, id):
         'followers': followers
     }
     return render(request, 'login_register/profile.html', context)
+
+def search(request):
+    users = User.objects.filter(first_name__icontains=request.POST['find_friends'])
+    response_data = {}
+    search_results = {}
+    for user in users:
+        search_results[user.username] = [user.profile.id, user.first_name, user.last_name]
+    # request.session['search_results'] = search_results
+    response_data['search_results'] = search_results
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
+    # return redirect(reverse("news:newsreel"))

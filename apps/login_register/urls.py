@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^account/update/(?P<id>\d+)$', views.update_account, name="update_account"),
     url(r'^follow/(?P<id>\d+)$', views.follow, name="follow"),
     url(r'^profile/(?P<id>\d+)$', views.profile, name="profile"),
+    url(r'^search/$', views.search, name="search"),
 ]
