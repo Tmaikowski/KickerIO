@@ -17,7 +17,7 @@ print "-"*50
 #ISSUE: turned off csrf verification in settings.py. Figure this out to turn back on
 
 # IDEA: Populate the SEARCHES list with each users' top search terms/most frequently searched terms
-SEARCHES = ("soccer", "computers", "trump", "google")
+SEARCHES = ("soccer", "computers", "trump", "google", "taco bell")
 print SEARCHES
 
 #Alexa Config
@@ -39,7 +39,7 @@ def LaunchRequest(session):
 
     print "LAUNCHREQUEST"
     return ResponseBuilder.create_response(message="Welcome to Kicker... ... ...What can I help you with?",
-                                           reprompt="What can I help you with?",
+                                        #    reprompt="What can I help you with?",
                                            end_session=False,
                                            launched=True)
 
@@ -67,11 +67,12 @@ def ReadTopStory(session, search_term):
 
     top_story = get_summarized_text(search_term)[0]
     story_title = top_story['title']
-    sentences = " ".join(top_story['summary_sentences'])
+    sentences = " ".join(top_story['summary_sentences']).encode('ascii', errors='ignore')
 
     kwargs = {}
     # kwargs['message'] = "{0} points added to house {1}.".format(points, house)
-    kwargs['message'] = "{}... ... ...{}.".format(story_title, sentences)
+
+    kwargs['message'] = "{}... ... ...{}.".format(story_title.encode(), sentences)
     if session.get('launched'):
         kwargs['reprompt'] = "What would you like me to search?"
         kwargs['end_session'] = False

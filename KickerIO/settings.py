@@ -25,7 +25,7 @@ SECRET_KEY = 'z5h*afy3d@ga4y=(48fbwm&^h$7%r1yknt=73w3$h5ciel(lgr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['489e1159.ngrok.io', 'localhost']
+ALLOWED_HOSTS = ['1b7194d1.ngrok.io', 'localhost']
 
 
 #Alexa Config
